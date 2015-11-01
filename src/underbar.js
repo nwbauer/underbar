@@ -326,7 +326,37 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
-  
+  	var storedResults = [];
+
+	
+  	return function(){			
+  		var result = null;
+  		var passedArguments = arguments;
+  		
+  		var preResult = _.reduce(storedResults, function(result,computedResult){
+  			var alreadyComputed = true;  
+  			
+  			//need to break, so don't use each
+  			for(var i=0;i<passedArguments.length;i++){
+  				if(passedArguments[i]!==computedResult.args[i]){
+  					alreadyComputed = false;
+  					break;
+  				}
+  			
+  			}
+  			
+  			return alreadyComputed ? computedResult.value : result;
+  			
+  		},null);
+
+  		if(preResult === null){
+  				result = func.apply(this,arguments);
+  				storedResults.push({args:arguments,value:result});
+  				return result;
+  		}else{
+  			return preResult;
+  		}
+  	}
   
   };
 
@@ -337,7 +367,15 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
-
+	var args = [];
+	//arguments is not an array, can't use slice
+	for(var i =2;i<arguments.length;i++){
+		args.push(arguments[i]);
+	}
+	
+	return setTimeout(function(){
+		return func.apply(null,args);
+	},wait);
   };
 
 
@@ -352,6 +390,16 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+  	var temp_array = array.slice();
+  	var return_array = [];
+  	var newIndex = 0;
+  	
+  	for(var i=0;i<array.length;i++){
+  		newIndex = Math.floor(Math.random()*temp_array.length);
+  		return_array.push(temp_array[newIndex]);
+  		temp_array.splice(newIndex,1);
+  	}
+  	return return_array;
   };
 
 
