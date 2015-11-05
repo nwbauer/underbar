@@ -393,14 +393,14 @@
   	var temp_array = array.slice();
   	var return_array = [];
   	var newIndex = 0;
-  	
-  	for(var i=0;i<array.length;i++){
-  		
-  		//keep randomly choosing until a different index is chosen (could be expensive)
-  		do{
-  			newIndex = Math.floor(Math.random()*temp_array.length);
-  		}while(newIndex === i);
-  		
+
+	//first index chosen cannot be 0 so output array does not match new array
+  	newIndex = Math.floor(Math.random()*(temp_array.length-1) +1);
+  	return_array.push(temp_array[newIndex]);	
+  	temp_array.splice(newIndex,1);  	
+
+  	for(var i=1;i<array.length;i++){
+  		newIndex = Math.floor(Math.random()*temp_array.length);
   		return_array.push(temp_array[newIndex]);
   		temp_array.splice(newIndex,1);
   	}
