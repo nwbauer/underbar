@@ -395,7 +395,12 @@
   	var newIndex = 0;
   	
   	for(var i=0;i<array.length;i++){
-  		newIndex = Math.floor(Math.random()*temp_array.length);
+  		
+  		//keep randomly choosing until a different index is chosen (could be expensive)
+  		do{
+  			newIndex = Math.floor(Math.random()*temp_array.length);
+  		}while(newIndex === i);
+  		
   		return_array.push(temp_array[newIndex]);
   		temp_array.splice(newIndex,1);
   	}
